@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { Navbar } from "@/components/navbar";
+import { HeaderProvider } from "@/lib/header-context";
+import { ThemeProvider } from "@/lib/theme-context";
+import { Providers } from "@/app/providers";
 import "./globals.css";
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,11 +34,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={jetbrainsMono.variable}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Providers>
+          <ThemeProvider>
+            <HeaderProvider>
+              <SidebarProvider>
+                <AppSidebar />
+                <div className="flex flex-col w-full">
+                  <Navbar />
+                  <main className="flex-1 overflow-auto">{children}</main>
+                </div>
+              </SidebarProvider>
+            </HeaderProvider>
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
